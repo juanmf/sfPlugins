@@ -28,7 +28,7 @@ class RenderPdfConsole extends Renderer
     public function __construct() 
     {
         parent::__construct();
-        $this->_fopPath = __DIR__ . '/RenderPDF/fop-1.1rc1/' ;
+        $this->_fopPath = __DIR__ . '/RenderPDF/vendor/fop-1.1rc1/' ;
     }
     
     /**
