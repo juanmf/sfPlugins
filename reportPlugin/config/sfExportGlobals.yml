@@ -4,7 +4,7 @@ globals:
       parent: CompositeView
       leaf: View
   step3:
-    available_output: [HTML, XSLFO, XLS, PDF]
+    available_output: [HTML, XSLFO, XLS, PDFWebService, PDFConsole]
     output_format: HTML # this is usead, and should be set by the action, to select the renderer.
     default: HTML
     HTML:
@@ -23,9 +23,13 @@ globals:
       xslt_output:
         sheet: ~ # xslt FO to HTML use system default if null.
         params: {} # Associative array with relevant parameters for this xslt.
-    PDF:
+    PDFWebService:
       class: RenderPdfSoap # Use ApacheFop through WEB SERVICE
-#      class: RenderPdfbridge # TODO: Use ApacheFop through Java Bridge
+      xslt_output:
+        sheet: ~ # xslt FO to HTML use system default if null.
+        params: {} # Associative array with relevant parameters for this xslt.
+    PDFConsole:
+      class: RenderPdfConsole # Use ApacheFop through console executable
       xslt_output:
         sheet: ~ # xslt FO to HTML use system default if null.
         params: {} # Associative array with relevant parameters for this xslt.

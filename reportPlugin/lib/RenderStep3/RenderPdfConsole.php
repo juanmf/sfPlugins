@@ -9,7 +9,7 @@
  */
 
 /**
- * This class uses JavaBridge to invoke ApacheFop's services.
+ * This class uses exec to execute fop from console to invoke ApacheFop's services.
  * 
  * You can determine the usage of this class in global config, as you might want 
  * to consume ApacheFop with a different strategy.
@@ -18,9 +18,18 @@
  * @see    %sf_plugins_dir%/reportPlugin/config/sfExportGlobals.yml
  * @see    Renderer
  */
-class RenderPdfBridge extends Renderer
+class RenderPdfConsole extends Renderer
 {
-    private $_pdfRenderer = null;
+    private $_fopPath = null;
+    
+    /**
+     * Configures This class. Sets fop Path.
+     */
+    public function __construct() 
+    {
+        parent::__construct();
+        $this->_fopPath = __DIR__ . '/RenderPDF/fop-1.1rc1/' ;
+    }
     
     /**
      * This is the final Step in this 3 steps process:
@@ -46,8 +55,36 @@ class RenderPdfBridge extends Renderer
     public function renderReport(DOMDocument $xslFo, sfWebResponse $response = null) 
     {
         $response->setContentType('application/pdf');
-        $this->_pdfRenderer = new RenderPDFConsummer($xslFo->saveXML());
-        /*TODO: implement javaBridge*/
-        return $this->_pdfRenderer->getPdfStream();
+        $response->setHttpHeader(
+            'Content-Disposition', 
+            "attachment; filename=report.pdf"
+        );
+        $tStamp = microtime(true);
+        $executable = stristr(PHP_OS, "WIN") ? 'fop.cmd' : 'fop';
+        $output = array();
+        $returnVar = 0;
+        $foPath = __DIR__ . '/RenderPDF/tmp/report.fo.' . $tStamp;
+        $pdfPath = __DIR__ . '/RenderPDF/tmp/report.pdf.' . $tStamp;
+        try {
+            file_put_contents($foPath, $xslFo->saveXML());
+            $command = $this->_fopPath . $executable
+                     . ' -fo ' . $foPath
+                     . ' -pdf ' . $pdfPath;
+            exec($command, $output, $returnVar);
+            if ((boolean) $returnVar) {
+                throw new Exception(implode(PHP_EOL, $output), $returnVar);
+            }
+        } catch (Exception $e) { 
+            $ex = new Exception(
+                'Error executing Apache FOP, return value is pased to Exception Code.'
+                . ' Command execution output follows:' . PHP_EOL . implode(PHP_EOL, $output), 
+                $returnVar, $e
+            );
+            throw $ex;
+        }
+        $out = file_get_contents($pdfPath);
+        unlink($foPath);
+        unlink($pdfPath);
+        return $out;
     }
 }

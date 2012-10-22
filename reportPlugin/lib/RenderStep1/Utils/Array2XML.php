@@ -55,7 +55,7 @@ class Array2XML
      * . &lt;result&gt;
      * </pre>
      */
-    public static function array2Xml(array $array) 
+    public static function arrayToXml(array $array) 
     {
         $result = new DOMDocument();
         $rootNode = $result->createElement('result');
