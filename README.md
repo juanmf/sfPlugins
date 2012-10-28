@@ -12,7 +12,7 @@ The reports are generated in three phases:
    * Rendering
 
 The Data generation consist of anything that produces a RAW XML with the report 
-data. Of course, this XML structure mus be consistent among several rendering of 
+data. Of course, this XML structure must be consistent among several rendering of 
 the same report. Since you will consider this structure when creating the 
 template, as the template must consume this data XML. The reportEngine provides
 a placeholder class for putting this kind of logic, but you can generate it in
