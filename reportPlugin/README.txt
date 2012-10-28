@@ -1,13 +1,51 @@
 reportPlugin
 ============
+
+Report Plugin is a tool for generating reports with PHP, even though it provides 
+a PHP API it integrates several technologies to achieve it.
+The reports are generated in three phases:
+   * Data Generation 
+   * Data and template Merging.
+   * Rendering
+
+The Data generation consist of anything that produces a RAW XML with the report 
+data. Of course, this XML structure mus be consistent among several rendering of 
+the same report. Since you will consider this structure when creating the 
+template, as the template must consume this data XML. The reporEngine provides
+a placeholder class for putting this kind of logic, but you can generate it in
+methods elsewhere, so you either provide the callback to generate it or the XML
+itself. To make things easier, a Doctrine XML Hydrator is bundled so you can get 
+XML out of your Doctrine Queries, this is really handy if you use Doctrine, if not
+you have an arrayToXML method in utils, that will also help.. 
+
+The template must be an XSLT transformation stylesheet, that will be processed by
+PHP XSLT Processor, don't get scared yet, I provide an automatic way of generating 
+it from a MS WordML 2003 document. This stylesheet consumes your data XML and 
+Renders a XSL-FO document, that represents the rendered report, but in FO. 
+The report must still go throug the Rendering phase, if you want something different 
+from XSL-FO.
+
+In the Rendering phase transforms the XSL-FO representation into PDF, HTML, or simply 
+the same FO. more transformations can be easilly added.
+
+The look and feel of the generated PDFs are great, thanks to XSL-FO and ApacheFOP. 
+They look almost identical to the Word template you make (Thanks to Word2FO).
+By the time you feel the need to tweak the automatically generated template, if it 
+ever happens, you'll have already made some nice reports and feel more at home 
+with XSLT and XSL-FO. which by the way is infinitelly easier to tweak than to 
+write from scratch.
+
+Take a look at the HowToReport to see what can be done: https://github.com/juanmf/sfPlugins/blob/master/reportPlugin/doc/HowToReport.docx?raw=true
+
+Dependencies
+============
+
 ReportPugin has the following dependencies, which I can't package all together:
 
 * Word2FO a great tool from RenderX http://www.renderx.com/tools/word2fo.html which I modified so that you can create XSLT stylesheets that consume XML data instead of a final XSLFO document. I distribute the Path though, (in reportPlugin\doc\Word2FO.patch). RenderX.com will ask for your mail to let you download the stylesheet, which comes with full license (text from RenderX's page ..."These stylesheets were prepared by RenderX's development team and Microsoft for general use."...). This is used for templating, not in the rendering process, but it makes life easier. How to edit Word Documents to take advantage of my changes is detailed in reportPlugin\doc\HowToReport.docx
-* ApacheFOP an open source FO Processor, made in java, for which I made a wrapper and some classes to consume it as a web service (you must deploy it on an application server for that, i.e. Glassfish) or from Command line.
+* ApacheFOP an open source FO Processor, made in java, for which I made a wrapper and some classes to consume it as a web service (you must deploy it on an application server for that, i.e. Glassfish) or from Command line. This one comes bundled.
 * fo2html.xsl Also from RendeX (http://services.renderx.com/Content/tools/fo2html.html), which I modified a bit, not finished nor tested yet, to generate HTML that Excel understands, and alter default table width. This is used for rendering the report in HTML. You should put this stylesheet in reportPlugin\lib\RenderStep3\xsl\fo2html.xsl to match sfExportGlobals.yml configuration
 Note: you can find both stylesheets in the Free tools Section at http://www.renderx.com/download/shop.html
-
-Take a look at the HowToReport to see what can be done: https://github.com/juanmf/sfPlugins/blob/master/reportPlugin/doc/HowToReport.docx?raw=true
 
 The user manual is located at reportPlugin/doc/HowToReport.docx
 You will need to apply the patch to Word2FO stylesheets before it 
