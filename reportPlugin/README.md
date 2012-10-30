@@ -35,7 +35,8 @@ ever happens, you'll have already made some nice reports and feel more at home
 with XSLT and XSL-FO. which by the way is infinitely easier to tweak than to 
 write from scratch.
 
-Take a look at the HowToReport to see what can be done: https://github.com/juanmf/sfPlugins/blob/master/reportPlugin/doc/HowToReport.docx?raw=true
+Take a look at the HowToReport to see what can be done: 
+https://github.com/juanmf/sfPlugins/blob/master/reportPlugin/doc/HowToReport.pdf?raw=true
 
 Dependencies
 ============
