@@ -11,7 +11,7 @@ The reports are generated in three phases:
    * Data and template Merging.
    * Rendering
 
-The Data generation consist of anything that produces a RAW XML with the report 
+The Data generation consists of anything that produces a RAW XML with the report 
 data. Of course, this XML structure must be consistent among several rendering of 
 the same report. Since you will consider this structure when creating the 
 template, as the template must consume this data XML. The reportEngine provides
@@ -38,4 +38,5 @@ ever happens, you'll have already made some nice reports and feel more at home
 with XSLT and XSL-FO. which by the way is infinitely easier to tweak than to 
 write from scratch.
 
-Take a look at the HowToReport to see what can be done: https://github.com/juanmf/sfPlugins/blob/master/reportPlugin/doc/HowToReport.pdf?raw=true
+Take a look at the HowToReport to see what can be done: 
+https://github.com/juanmf/sfPlugins/blob/master/reportPlugin/doc/HowToReport.pdf?raw=true
