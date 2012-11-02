@@ -51,31 +51,84 @@ class LogicalScreenCallbacks
     {
         $xml = <<<XML
 <root>
-    <Node>
-        <SubNode>Some Text</SubNode>
-    </Node>
-    <row>
-        <Column>
-            <day>15</day>
-        </Column>
-        <Column>
-            <day>5</day>
-        </Column>
-        <Column>
-            <day>17</day>
-        </Column>
-    </row>
-    <row>
-        <Column>
-            <day>1</day>
-        </Column>
-        <Column>
-            <day>10</day>
-        </Column>
-        <Column>
-            <day>25</day>
-        </Column>
-    </row>
+    <CirugiasProgramadas_Collection>
+        <CirugiasProgramadas><!--Scheduled surgery [1]-->
+            <servicio>Cardiología</servicio><!--1st Service name-->
+            <cantidad_dia>
+                <cantidad>0</cantidad><!--surgery count-->
+                <dia>01</dia><!--day-->
+            </cantidad_dia>            
+            <cantidad_dia>
+                <cantidad>0</cantidad><!--surgery count-->
+                <dia>02</dia><!--day-->
+            </cantidad_dia>       
+            <cantidad_dia>
+                <cantidad>1</cantidad><!--surgery count-->
+                <dia>30</dia><!--30th day of the month-->
+            </cantidad_dia>
+        </CirugiasProgramadas>
+        <CirugiasProgramadas><!--Scheduled surgery [1]-->
+            <servicio>Urología</servicio><!--5th Service name-->
+            <cantidad_dia>
+                <cantidad>0</cantidad><!--surgery count-->
+                <dia>01</dia><!--day-->
+            </cantidad_dia>            
+            <cantidad_dia>
+                <cantidad>0</cantidad><!--surgery count-->
+                <dia>02</dia><!--day-->
+            </cantidad_dia>          
+            <cantidad_dia>
+                <cantidad>1</cantidad><!--surgery count-->
+                <dia>30</dia><!--30th day of the month-->
+            </cantidad_dia>
+        </CirugiasProgramadas>
+    </CirugiasProgramadas_Collection>
+</root>
+XML;
+        $q = new DOMDocument();
+        $q->loadXML($xml);
+        return $q;
+    }
+    /**
+     * Dummy method, this method gets called by LayoutManager::render(). Which 
+     * gets informed by the config file sfExportConfig.yml's:
+     * <pre> 
+     * .step1: 
+     * .  logical_screen_callback: [LogicalScreenCallbacks, helloworld] # here is the callback!
+     * .  callback_params: ~ # No params this time! 
+     * </pre> 
+     
+     * This method generates the xml data for the 'How to create a simple Report'
+     * topic of the Report Engine tutorial
+     *
+     * @return DomDocument With the XMLRawData that hsould be processed in Step2
+     * @see LayoutManager::render()
+     */
+    public static function howToControlBreak()
+    {
+        $xml = <<<XML
+<root>
+    <lvl1>
+        <lvl1Name>Cars from World</lvl1Name>
+        <lvl2>
+            <lvl2Name>Cars from America</lvl2Name>
+            <lvl3>
+                <lvl3Name>Cars from Argentina</lvl3Name>
+                <lvl4>
+                    <lvl4Name>Cars from Corrientes</lvl4Name>
+                </lvl4>
+                <lvl4>
+                    <lvl4Name>Cars from Chaco</lvl4Name>
+                </lvl4>
+            </lvl3>
+            <lvl3>
+                <lvl3Name>Cars from Brasil</lvl3Name>
+                <lvl4>
+                    <lvl4Name>Cars from Rio de Janeiro</lvl4Name>
+                </lvl4>
+            </lvl3>
+        </lvl2>
+    </lvl1>
 </root>
 XML;
         $q = new DOMDocument();
@@ -136,43 +189,29 @@ XML;
      */
     public static function listadoPersonasXedad()
     {
-        //        $q = Doctrine_Query::create()
-        //            ->from('Persona p')
-        //            ->innerJoin('p.PersonaDomicilio pd')
-        //            ->innerJoin('pd.Domicilio d')
-        //            ->innerJoin('d.Localidad l')
-        ////            ->select('p.nro_documento, p.nombre, YEAR(p.fecha_nacimiento)')
-        //            ->limit(6)
-        //            ->execute(array(), 'xml');
-        //        /* @var $q DomDocument */
-        //        
-        //        $birthYearCount = Doctrine_Query::create()
-        //            ->from('Persona p')
-        //            ->select('YEAR(p.fecha_nacimiento) as years, count(YEAR(p.fecha_nacimiento)) as counted')
-        //            ->groupBy('years')
-        //            ->orderBy('years')
-        //            ->limit(6)
-        //            ->execute(array(), 'xml');
-        //        
-        //        $chart = ListPersonasEdadCharts::listadoPersonasXedadCreateChart($birthYearCount);
-        //        $encodedChart = base64_encode($chart);
-        //
-        //        $chartNode = $q->createElement('chart', $encodedChart);
-        //        $q->documentElement->appendChild($chartNode);
-        $xml = <<<XML
-<root>
-    <Node>
-        <SubNode>Some Text</SubNode>
-    </Node>
-    <date>
-        <day>15</day>
-        <month>6</month>
-        <year>2012</year>
-    </date>
-</root>
-XML;
-        $q = new DOMDocument();
-        $q->loadXML($xml);
+        $q = Doctrine_Query::create()
+            ->from('Persona p')
+            ->innerJoin('p.PersonaDomicilio pd')
+            ->innerJoin('pd.Domicilio d')
+            ->innerJoin('d.Localidad l')
+            ->select('p.nro_documento, p.nombre, YEAR(p.fecha_nacimiento)')
+            ->limit(6)
+            ->execute(array(), 'xml');
+        /* @var $q DomDocument */
+
+        $birthYearCount = Doctrine_Query::create()
+            ->from('Persona p')
+            ->select('YEAR(p.fecha_nacimiento) as years, count(YEAR(p.fecha_nacimiento)) as counted')
+            ->groupBy('years')
+            ->orderBy('years')
+            ->limit(6)
+            ->execute(array(), 'xml');
+
+        $chart = ListPersonasEdadCharts::listadoPersonasXedadCreateChart($birthYearCount);
+        $encodedChart = base64_encode($chart);
+
+        $chartNode = $q->createElement('chart', $encodedChart);
+        $q->documentElement->appendChild($chartNode);
         return $q;
     }
     
