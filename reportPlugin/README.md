@@ -1,9 +1,3 @@
-Migrating
-=========
-We are making an effort to turn this plugin into a standalone component.
-https://github.com/juanmf/neatReports/
-
-
 reportPlugin
 ============
 
